@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fabio.aws.S3Util;
 
 @Controller
-public class MainController {
+public class FileS3Controller {
 	
 	@GetMapping("/")
 	public String viewHomePage() {
