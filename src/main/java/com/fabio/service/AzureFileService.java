@@ -15,32 +15,34 @@ import org.springframework.web.multipart.MultipartFile;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
-import com.fabio.property.FileStorageProperties;
+import com.fabio.property.AzureProperties;
 
 import lombok.NonNull;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
 @Service
-public class FileService {
-	private Logger logger = Logger.getLogger(FileService.class.getName());
+public class AzureFileService {
+	private Logger logger = Logger.getLogger(AzureFileService.class.getName());
 
-	private final Path fileStorageLocation;
-	
-	private final BlobServiceClient blobServiceClient;
+	private Path fileStorageLocation;
+	private BlobServiceClient blobServiceClient;
+	private String azureContainerName;
 	
 	@Autowired
-	public FileService(@NonNull FileStorageProperties fileStorageProperties, BlobServiceClient blobServiceClient) {
-		logger.info("::"+fileStorageProperties.getTesteFabio());
-		fileStorageLocation = Path.of(fileStorageProperties.getUploadDir());
+	public AzureFileService(@NonNull AzureProperties fileStorageProperties, BlobServiceClient blobServiceClient) {
+		init(fileStorageProperties, blobServiceClient);
 		
-		this.blobServiceClient = blobServiceClient;
 		try {
 			Files.createDirectories(fileStorageLocation);
 		} catch (IOException e) {
 			logger.info("Could not create the directory where the upload files will be stored");
 			e.printStackTrace();
 		}
+	}
+
+	private void init(AzureProperties fileStorageProperties, BlobServiceClient blobServiceClient) {
+		this.blobServiceClient = blobServiceClient;
+		azureContainerName = fileStorageProperties.getAzureContainerName();
+		fileStorageLocation = Path.of(fileStorageProperties.getUploadDir());
 	}
 	
 	public Path getFileStorageLocation() {
@@ -53,9 +55,9 @@ public class FileService {
 		return fileStorageLocation;
 	}
 	
-	public Boolean uploadAndDowloadFile(@NonNull MultipartFile file, String containerName) {
+	public Boolean uploadAndDowloadFile(@NonNull MultipartFile file) {
 		boolean isSuccess = true;
-		BlobContainerClient blobContainerClient = getBlobContainerClient(containerName);
+		BlobContainerClient blobContainerClient = getBlobContainerClient(azureContainerName);
 		String fileName = file.getOriginalFilename();
 		BlockBlobClient blockBlobClient = blobContainerClient.getBlobClient(fileName).getBlockBlobClient();
 		try {
