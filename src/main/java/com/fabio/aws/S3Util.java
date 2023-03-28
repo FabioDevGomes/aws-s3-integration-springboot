@@ -41,6 +41,13 @@ public class S3Util {
 		System.setProperty("aws.secretAccessKey", "V5k0xJtkE5DDOF6h78h++DPQZmBg3M7n5Vs2HBRe");
 	}
 	
+	public static byte[] downloadFromPostman(String fileName) throws IOException {
+		keyFile = fileName;
+		client = S3Client.builder().build();
+		
+		return downloadFile();
+	}
+	
 	public static byte[] downloadFile() throws IOException {
 		GetObjectRequest request = GetObjectRequest.builder()
 				.bucket(BUCKET)

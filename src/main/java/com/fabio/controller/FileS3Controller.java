@@ -21,7 +21,7 @@ public class FileS3Controller {
 	}
 	
 	@PostMapping(value = "/fileAws/upload", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-	public ResponseEntity<?> handlerUploadForm(String description, @RequestParam("file") MultipartFile file) {
+	public ResponseEntity<?> uploadAndDownload(String description, @RequestParam("file") MultipartFile file) {
 		String fileName = file.getOriginalFilename();
 		ByteArrayResource resource = null;
 		
@@ -31,6 +31,19 @@ public class FileS3Controller {
 		try {
 			S3Util.uploadFile(fileName, file.getInputStream());
 			resource = new ByteArrayResource(S3Util.downloadFile());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).contentLength(resource.contentLength()).body(resource);
+	}
+
+	@PostMapping(value = "/fileAws/download", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+	public ResponseEntity<?> download(String fileName) {
+		ByteArrayResource resource = null;
+		
+		try {
+			resource = new ByteArrayResource(S3Util.downloadFromPostman(fileName));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
