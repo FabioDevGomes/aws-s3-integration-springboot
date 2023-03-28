@@ -1,12 +1,8 @@
 package com.fabio.aws;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -54,17 +50,6 @@ public class S3Util {
 		ResponseInputStream<GetObjectResponse> response = client.getObject(request);
 
 		return IoUtils.toByteArray(response);
-		
-//		BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(keyFile));
-//		byte[] buffer = new byte[4096];
-//		int bytesRead = -1;
-//		
-//		while ((bytesRead = response.read(buffer)) != -1) {
-//			outputStream.write(buffer, 0, bytesRead);
-//		}
-		
-//		response.close();
-//		outputStream.close();
 	}
 	
 }

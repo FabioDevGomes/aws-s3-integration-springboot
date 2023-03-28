@@ -23,11 +23,10 @@ public class FileS3Controller {
 	@PostMapping(value = "/fileAws/upload", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
 	public ResponseEntity<?> handlerUploadForm(String description, @RequestParam("file") MultipartFile file) {
 		String fileName = file.getOriginalFilename();
+		ByteArrayResource resource = null;
 		
 		System.out.println("::::: Description "+ description);
 		System.out.println("::::: File name "+ fileName);
-		
-		ByteArrayResource resource = null;
 		
 		try {
 			S3Util.uploadFile(fileName, file.getInputStream());
