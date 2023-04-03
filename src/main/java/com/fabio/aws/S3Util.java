@@ -37,8 +37,8 @@ public class S3Util {
 	
 	private static void setProperties() {
 		System.setProperty("aws.region", "sa-east-1");
-		System.setProperty("aws.accessKeyId", "AKIAW3UJ24CPCXIY4YOR");
-		System.setProperty("aws.secretAccessKey", "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");
+		System.setProperty("aws.accessKeyId", "");
+		System.setProperty("aws.secretAccessKey", "");
 	}
 	
 	public static byte[] downloadFromPostman(String fileName) throws IOException {
